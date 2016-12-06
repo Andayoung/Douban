@@ -118,8 +118,8 @@
     <orderEntry type="library" exported="" name="avoscloud-sns-v3.15.3" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.5" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-sdk-v3.15.3" level="project" />
-    <orderEntry type="library" exported="" name="androidannotations-api-3.3.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-24.2.1" level="project" />
+    <orderEntry type="library" exported="" name="androidannotations-api-3.3.2" level="project" />
     <orderEntry type="library" exported="" name="okio-1.6.0-leancloud" level="project" />
     <orderEntry type="library" exported="" name="qq-sdk-1.6.1-leancloud" level="project" />
     <orderEntry type="library" exported="" name="protobuf-java-2.6.1" level="project" />

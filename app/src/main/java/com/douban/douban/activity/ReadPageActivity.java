@@ -53,9 +53,7 @@ public class ReadPageActivity extends Activity implements NetCallBack {
     String netBookPathExtra;
     //    @Extra(TodayFragment.PAGENUM)
 //    String pageNumExtra;
-    BufferedReader reader;
-    CharBuffer buffer = CharBuffer.allocate(8 * 1024);
-    InputStream inputStream;
+    ReadHelp r;
 
     @AfterViews
     void initView() {
@@ -78,89 +76,58 @@ public class ReadPageActivity extends Activity implements NetCallBack {
         });
     }
 
-
-    private void loadBook(NetCallBack netCallBack) {
-        File file = new File(bookPathExtra);
-        if (!file.exists()) {
-            Toast.makeText(this, "file is not exits", Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                inputStream = new FileInputStream(file);
-                readBook(netCallBack);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    void readBook(NetCallBack netCallBack) {
-        try {
-            Charset charset = CharsetDetector.detect(inputStream);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, charset);
-            reader = new BufferedReader(inputStreamReader);
-            reader.read(buffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            netCallBack.success();
-        }
+    @Background(id = "load_sdcard_book")
+    void loadBook(NetCallBack netCallBack) {
+        r = new ReadHelp(bookPathExtra,netCallBack);
+//        netCallBack.success();
     }
 
     @Background(id = "load_net_book")
     void loadNetBook(NetCallBack netCallBack) {
-        HttpURLConnection httpConn = null;
-        StringBuffer sb = new StringBuffer();
-        URL url = null;
-        try {
-            url = new URL(netBookPathExtra);
-            Log.e("999","url="+netBookPathExtra);
-            httpConn = (HttpURLConnection) url.openConnection();
-            HttpURLConnection.setFollowRedirects(true);
-            httpConn.setRequestMethod("GET");
-            inputStream = httpConn.getInputStream();
-            readBook(netCallBack);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        r = new ReadHelp(netBookPathExtra,netCallBack);
+//        netCallBack.success();
     }
+
+
 
     /**
      * 从指定位置开始载入一页
      */
     private void loadPage(int position) {
-        buffer.position(position);
-        Log.e("999", "buff=" + buffer);
-        readView.setText(buffer);
+//        buffer.position(position);
+        String context = r.seek(position);
+        Log.e("999", "context=" + context);
+        readView.setText(context);
     }
 
     /**
      * 上一页按钮
      */
     public void previewPageBtn() {
-        int hang = position - readView.getCharNum();
-        if (hang < 0) {
-            Toast.makeText(this, "已经是第一页哦", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        position -= readView.getCharNum();
+        position -= 1;
         loadPage(position);
-//        readView.resize();
+        readView.resize();
+//        int hang = position - readView.getCharNum();
+//        if (hang < 0) {
+//            Toast.makeText(this, "已经是第一页哦", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        position -= readView.getCharNum();
+//        loadPage(position);
     }
 
     /**
      * 下一页按钮
      */
     public void nextPageBtn() {
-        position += readView.getCharNum();
+        position += 1;
         loadPage(position);
+        readView.resize();
+//        position += readView.getCharNum();
+//        loadPage(position);
 //        readView.resize();
-        if (position == 8000) {
-        }
+//        if (position == 8000) {
+//        }
     }
 
     @Override
